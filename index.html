@@ -1,143 +1,133 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dedicatorias Musicales</title>
   <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #0b0b2a;
-      color: white;
-      overflow-x: hidden;
-      background-image: radial-gradient(white 1px, transparent 1px);
-      background-size: 4px 4px;
-      animation: twinkle 2s infinite linear;
+    * {
+      box-sizing: border-box;
     }
 
-    @keyframes twinkle {
-      0% { background-position: 0 0; }
-      100% { background-position: 4px 4px; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #000;
+      color: white;
+      background: radial-gradient(ellipse at bottom, #1a1a1a 0%, #000000 100%);
+      overflow-x: hidden;
+    }
+
+    /* Estrellas animadas */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+      z-index: 0;
+      opacity: 0.1;
+      animation: moveStars 50s linear infinite;
+    }
+
+    @keyframes moveStars {
+      from { background-position: 0 0; }
+      to { background-position: 1000px 1000px; }
     }
 
     .container {
-      max-width: 1024px;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
       margin: auto;
       padding: 2rem 1rem;
     }
 
-    .text-center { text-align: center; }
-    .text-purple-400 { color: #c084fc; }
-    .text-purple-300 { color: #d8b4fe; }
-    .text-white { color: white; }
-    .text-4xl { font-size: 2.5rem; }
-    .text-2xl { font-size: 1.5rem; }
-    .text-lg { font-size: 1.125rem; }
-    .font-bold { font-weight: bold; }
-    .font-semibold { font-weight: 600; }
-
-    .grid {
-      display: grid;
-      gap: 1.5rem;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    }
-
-    .song-card {
-      position: relative;
-      height: 340px;
-      background: rgba(255,255,255,0.05);
-      border: 2px solid #c084fc;
-      border-radius: 15px;
-      overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s;
-      box-shadow: 0 0 10px rgba(192,132,252,0.3);
-      backdrop-filter: blur(8px);
-    }
-
-    .song-card.active {
-      box-shadow: 0 0 30px rgba(192,132,252,0.9);
-      transform: scale(1.05);
-    }
-
-    .song-img {
-      width: 100%;
-      height: 170px;
-      object-fit: cover;
-    }
-
-    .song-info {
-      padding: 0.5rem 1rem;
-    }
-
-    .song-info h3 {
+    h1 {
+      text-align: center;
       color: #c084fc;
-      margin: 0.3rem 0;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .song {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: #111;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .song:hover {
+      background: #1c1c1c;
+      transform: scale(1.01);
+    }
+
+    .song img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .info {
+      flex-grow: 1;
+    }
+
+    .info h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #d8b4fe;
+    }
+
+    .info p {
+      margin: 0.2rem 0;
+      color: #ccc;
+      font-size: 0.95rem;
     }
 
     .controls {
       display: flex;
+      align-items: center;
       justify-content: center;
-      margin-top: 0.5rem;
     }
 
     .controls button {
-      background-color: rgba(255, 255, 255, 0.05);
-      border: 2px solid #c084fc;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: none;
+      border: none;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-    }
-
-    .controls button:hover {
-      background: rgba(192, 132, 252, 0.2);
-      transform: scale(1.1);
+      padding: 0.5rem;
     }
 
     .controls svg {
+      width: 30px;
+      height: 30px;
       fill: #c084fc;
     }
 
-    .progress {
-      height: 4px;
-      background: rgba(192, 132, 252, 0.2);
-      margin: 10px 20px 0;
-      border-radius: 3px;
-      overflow: hidden;
+    .active {
+      background: #2b0b3f;
     }
 
-    .progress-bar {
-      height: 100%;
-      background: #c084fc;
-      width: 0%;
-      transition: width 0.1s linear;
+    audio {
+      display: none;
     }
-
   </style>
 </head>
 <body>
   <div class="container">
-    <header class="text-center">
-      <h1 class="text-purple-400 text-4xl font-bold">Dedicatorias Musicales</h1>
-      <p class="text-lg text-white">Una canción cada semana para alguien especial</p>
-    </header>
-
-    <section class="mt-8">
-      <h2 class="text-purple-300 text-2xl font-semibold mb-4">Canciones Dedicadas</h2>
-      <div id="songList" class="grid"></div>
-    </section>
+    <h1>Dedicatorias Musicales</h1>
+    <div id="songList"></div>
   </div>
 
   <script>
     const songs = [
       {
         title: "Por ti",
-        artist: "3 am",
+        artist: "3am",
         message: "Esta canción me recuerda a ti cada vez que la escucho.",
         fileName: "musica/Cancion1.mp3",
         image: "img/cover1.jpg"
@@ -158,95 +148,73 @@
       }
     ];
 
-    const songList = document.getElementById('songList');
     let currentAudio = null;
-    let currentProgress = null;
+    let currentButton = null;
 
-    function renderSongs() {
-      songs.forEach((song, index) => {
-        const card = document.createElement('div');
-        card.className = 'song-card';
-        card.innerHTML = `
-          <img class="song-img" src="${song.image}" alt="cover">
-          <div class="song-info">
-            <h3>${song.title}</h3>
-            <p>Artista: ${song.artist}</p>
-            <p style="color:#d1d5db;font-style:italic;">${song.message}</p>
-          </div>
-          <div class="controls">
-            <button onclick="toggleSong(${index}, this)">
-              <svg width="30" height="30" viewBox="0 0 24 24">
-                <polygon class="play-icon" points="5,3 19,12 5,21"></polygon>
-                <g class="pause-icon" style="display:none">
-                  <rect x="6" y="4" width="4" height="16"></rect>
-                  <rect x="14" y="4" width="4" height="16"></rect>
-                </g>
-              </svg>
-            </button>
-          </div>
-          <div class="progress"><div class="progress-bar"></div></div>
-        `;
-        songList.appendChild(card);
-      });
+    function createSongCard(song, index) {
+      const div = document.createElement("div");
+      div.className = "song";
+
+      div.innerHTML = `
+        <img src="${song.image}" alt="Cover">
+        <div class="info">
+          <h3>${song.title}</h3>
+          <p>Artista: ${song.artist}</p>
+          <p><em>${song.message}</em></p>
+        </div>
+        <div class="controls">
+          <button onclick="togglePlay(${index}, this)">
+            <svg viewBox="0 0 24 24" class="icon">
+              <polygon class="play" points="5,3 19,12 5,21" />
+              <g class="pause" style="display: none">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </g>
+            </svg>
+          </button>
+        </div>
+      `;
+
+      return div;
     }
 
-    function toggleSong(index, button) {
+    function togglePlay(index, button) {
       const song = songs[index];
-      const card = button.closest('.song-card');
-      const progressBar = card.querySelector('.progress-bar');
-      const svg = button.querySelector('svg');
-      const playIcon = svg.querySelector('.play-icon');
-      const pauseIcon = svg.querySelector('.pause-icon');
+      const parent = button.closest(".song");
+      const svg = button.querySelector("svg");
+      const playIcon = svg.querySelector(".play");
+      const pauseIcon = svg.querySelector(".pause");
 
-      if (currentAudio && currentAudio.src.includes(song.fileName)) {
-        if (currentAudio.paused) {
-          currentAudio.play();
-          playIcon.style.display = 'none';
-          pauseIcon.style.display = 'block';
-          card.classList.add('active');
-          updateProgress(progressBar);
-        } else {
-          currentAudio.pause();
-          playIcon.style.display = 'block';
-          pauseIcon.style.display = 'none';
-          card.classList.remove('active');
-          clearInterval(currentProgress);
-        }
+      if (currentAudio && !currentAudio.paused && currentAudio.src.includes(song.fileName)) {
+        currentAudio.pause();
+        playIcon.style.display = "block";
+        pauseIcon.style.display = "none";
+        parent.classList.remove("active");
       } else {
         if (currentAudio) {
           currentAudio.pause();
-          clearInterval(currentProgress);
-          document.querySelectorAll('.song-card').forEach(c => c.classList.remove('active'));
-          document.querySelectorAll('.play-icon').forEach(i => i.style.display = 'block');
-          document.querySelectorAll('.pause-icon').forEach(i => i.style.display = 'none');
+          currentButton.querySelector(".play").style.display = "block";
+          currentButton.querySelector(".pause").style.display = "none";
+          document.querySelectorAll(".song").forEach(el => el.classList.remove("active"));
         }
+
         currentAudio = new Audio(song.fileName);
         currentAudio.play();
-        playIcon.style.display = 'none';
-        pauseIcon.style.display = 'block';
-        card.classList.add('active');
-        updateProgress(progressBar);
+        currentButton = svg;
+        playIcon.style.display = "none";
+        pauseIcon.style.display = "block";
+        parent.classList.add("active");
+
         currentAudio.onended = () => {
-          playIcon.style.display = 'block';
-          pauseIcon.style.display = 'none';
-          card.classList.remove('active');
-          progressBar.style.width = '0';
-          clearInterval(currentProgress);
+          playIcon.style.display = "block";
+          pauseIcon.style.display = "none";
+          parent.classList.remove("active");
         };
       }
     }
 
-    function updateProgress(progressBar) {
-      if (currentProgress) clearInterval(currentProgress);
-      currentProgress = setInterval(() => {
-        if (currentAudio && currentAudio.duration) {
-          const progress = (currentAudio.currentTime / currentAudio.duration) * 100;
-          progressBar.style.width = `${progress}%`;
-        }
-      }, 100);
-    }
-
-    renderSongs();
+    const songList = document.getElementById("songList");
+    songs.forEach((song, i) => songList.appendChild(createSongCard(song, i)));
   </script>
 </body>
 </html>
