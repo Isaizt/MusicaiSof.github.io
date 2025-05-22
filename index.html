@@ -1,358 +1,206 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dedicatorias Musicales</title>
   <style>
-    /* Tailwind CSS generado localmente (clases necesarias) */
-    .container { width: 100%; margin-right: auto; margin-left: auto; padding-left: 1rem; padding-right: 1rem; }
-    @media (min-width: 640px) { .container { max-width: 640px; } }
-    @media (min-width: 768px) { .container { max-width: 768px; } }
-    @media (min-width: 1024px) { .container { max-width: 1024px; } }
-    .mx-auto { margin-left: auto; margin-right: auto; }
-    .p-4 { padding: 1rem; }
-    .mb-8 { margin-bottom: 2rem; }
+    /* Tailwind-like CSS simplificado */
+    .container { max-width: 1024px; margin: auto; padding: 1rem; }
     .text-center { text-align: center; }
-    .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
-    .font-bold { font-weight: 700; }
-    .text-purple-400 { color: #c084fc; }
-    .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
-    .text-gray-300 { color: #d1d5db; }
-    .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+    .text-white { color: white; }
+    .font-bold { font-weight: bold; }
     .font-semibold { font-weight: 600; }
+    .text-purple-400 { color: #c084fc; }
     .text-purple-300 { color: #d8b4fe; }
-    .mb-4 { margin-bottom: 1rem; }
-    .grid { display: grid; }
-    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-    .gap-6 { gap: 1.5rem; }
-    @media (min-width: 640px) { .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (min-width: 768px) { .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    .text-white { color: #ffffff; }
-    .font-sans { font-family: ui-sans-serif, system-ui, sans-serif; }
-    .mt-2 { margin-top: 0.5rem; }
-    .text-gray-400 { color: #9ca3af; }
-    .italic { font-style: italic; }
+    .text-lg { font-size: 1.125rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .grid { display: grid; gap: 1.5rem; }
+    .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+    @media (min-width: 640px) { .sm\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 768px) { .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); } }
 
-    /* Estilos personalizados */
     body {
-      background: #1a1a1a; /* Fondo oscuro */
-      overflow-x: hidden;
       margin: 0;
-      position: relative;
+      font-family: sans-serif;
+      background: #1a1a1a;
+      color: white;
+      overflow-x: hidden;
     }
-    .stars {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .star {
-      position: absolute;
-      background: #ffffff;
-      border-radius: 50%;
-      animation: twinkle 5s infinite;
-    }
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.2; }
-      50% { opacity: 0.7; }
-    }
-    .decorations {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      pointer-events: none;
-    }
-    .decoration {
-      position: absolute;
-    }
+
     .song-card {
       position: relative;
-      width: 100%;
       height: 300px;
-      background: rgba(255, 255, 255, 0.1); /* Fondo transparente */
-      backdrop-filter: blur(10px); /* Efecto de desenfoque */
-      border: 2px solid #c084fc; /* Borde neón morado */
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border: 2px solid #c084fc;
       border-radius: 15px;
+      box-shadow: 0 0 20px rgba(192,132,252,0.5);
       overflow: hidden;
-      box-shadow: 0 0 20px rgba(192, 132, 252, 0.5); /* Brillo neón */
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      z-index: 2;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
+
     .song-card:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(192, 132, 252, 0.8);
+      box-shadow: 0 0 30px rgba(192,132,252,0.8);
     }
+
     .wave {
       position: absolute;
       top: 30%;
       left: 50%;
+      transform: translateX(-50%);
       width: 80%;
       height: 20%;
-      transform: translateX(-50%);
       background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><path d="M0 10 Q 10 5 20 10 T 40 10 T 60 10 T 80 10 T 100 10" fill="none" stroke="%23c084fc" stroke-width="2"/></svg>') repeat-x;
       background-size: 100% 100%;
-      z-index: 2;
     }
+
     .song-info {
       position: absolute;
       bottom: 20px;
       left: 20px;
-      color: #fff;
-      z-index: 3;
+      z-index: 2;
     }
-    .song-info h3 {
-      font-size: 1.2rem;
-      margin: 0;
-      color: #c084fc; /* Título en neón morado */
-    }
-    .song-info p {
-      font-size: 0.9rem;
-      margin: 0.2rem 0;
-      color: #d1d5db;
-    }
+
     .controls {
       position: absolute;
       bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      z-index: 3;
+      z-index: 2;
     }
+
     .controls button {
       background: none;
       border: none;
-      color: #c084fc; /* Botón en neón morado */
+      color: #c084fc;
       font-size: 1.5rem;
       cursor: pointer;
-      padding: 5px;
-      text-shadow: 0 0 10px rgba(192, 132, 252, 0.8);
     }
-    .controls button:hover {
-      color: #e0c3fc;
-      text-shadow: 0 0 15px rgba(192, 132, 252, 1);
-    }
+
     .progress {
       position: absolute;
       bottom: 50px;
       left: 20px;
       right: 20px;
       height: 4px;
-      background: rgba(192, 132, 252, 0.2); /* Fondo de la barra en morado claro */
-      z-index: 3;
+      background: rgba(192, 132, 252, 0.2);
     }
+
     .progress-bar {
       height: 100%;
-      background: #c084fc; /* Barra de progreso en neón morado */
+      background: #c084fc;
       width: 0;
       transition: width 0.1s linear;
       box-shadow: 0 0 10px #c084fc;
     }
   </style>
 </head>
-<body class="text-white font-sans">
-  <div class="stars" id="stars"></div>
-  <div class="decorations" id="decorations"></div>
-  <div class="container mx-auto p-4 relative z-10">
-    <header class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-purple-400">Dedicatorias Musicales</h1>
-      <p class="text-lg text-gray-300">Una canción cada semana para alguien especial 💜</p>
+<body>
+
+  <div class="container">
+    <header class="text-center">
+      <h1 class="text-purple-400 text-4xl font-bold">Dedicatorias Musicales</h1>
+      <p class="text-lg text-white">Una canción cada semana para alguien especial</p>
     </header>
 
-    <section class="mb-8">
-      <h2 class="text-2xl font-semibold text-purple-300 mb-4">Canciones Dedicadas</h2>
-      <div id="songList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+    <section class="mt-8">
+      <h2 class="text-purple-300 text-2xl font-semibold mb-4">Canciones Dedicadas</h2>
+      <div id="songList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3"></div>
     </section>
   </div>
 
   <script>
-    // Generar estrellas animadas
-    const starsContainer = document.getElementById('stars');
-    for (let i = 0; i < 100; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-      star.style.width = `${Math.random() * 3}px`;
-      star.style.height = star.style.width;
-      star.style.left = `${Math.random() * 100}%`;
-      star.style.top = `${Math.random() * 100}%`;
-      star.style.animationDelay = `${Math.random() * 5}s`;
-      starsContainer.appendChild(star);
-    }
-
-    // Lista de canciones definidas en el código
     const songs = [
       {
         title: "Tu Canción Favorita",
         artist: "Artista 1",
         message: "Esta canción me recuerda a ti cada vez que la escucho.",
-        fileName: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-        image: "https://via.placeholder.com/150?text=Portada+1"
+        fileName: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
       },
       {
         title: "Noches de Estrellas",
         artist: "Artista 2",
         message: "Para las noches que miramos las estrellas juntos.",
-        fileName: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-        image: "https://via.placeholder.com/150?text=Portada+2"
+        fileName: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
       },
       {
         title: "Sonrisas Eternas",
         artist: "Artista 3",
         message: "Tu sonrisa ilumina más que cualquier estrella.",
-        fileName: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-        image: "https://via.placeholder.com/150?text=Portada+3"
+        fileName: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
       }
     ];
 
-    // Lista de imágenes decorativas para el fondo (rutas relativas)
-    const decorations = [
-      { image: "./images/plantas-colgantes.png", width: 150, height: 200, top: "10px", left: "10px" },
-      { image: "./images/mariposa.png", width: 80, height: 80, bottom: "20%", left: "30%" },
-      { image: "./images/cactus.png", width: 100, height: 120, bottom: "10px", right: "10px" },
-      { image: "./images/puntos.png", width: 120, height: 120, top: "10px", right: "10px" },
-      { image: "./images/curva.png", width: 200, height: 200, bottom: "10px", left: "10px" }
-    ];
-
-    // Renderizar decoraciones
-    const decorationsContainer = document.getElementById('decorations');
-    decorations.forEach(dec => {
-      const img = document.createElement('img');
-      img.src = dec.image;
-      img.className = 'decoration';
-      img.style.width = `${dec.width}px`;
-      img.style.height = `${dec.height}px`;
-      if (dec.top) img.style.top = dec.top;
-      if (dec.bottom) img.style.bottom = dec.bottom;
-      if (dec.left) img.style.left = dec.left;
-      if (dec.right) img.style.right = dec.right;
-      decorationsContainer.appendChild(img);
-    });
-
-    // Renderizar canciones
     const songList = document.getElementById('songList');
     let currentAudio = null;
     let currentProgress = null;
 
     function renderSongs() {
-      songList.innerHTML = '';
       songs.forEach((song, index) => {
-        const songCard = document.createElement('div');
-        songCard.className = 'song-card';
-        songCard.innerHTML = `
+        const card = document.createElement('div');
+        card.className = 'song-card';
+        card.innerHTML = `
           <div class="wave"></div>
           <div class="song-info">
-            <h3>${song.title}</h3>
+            <h3 class="text-purple-400">${song.title}</h3>
             <p>Artista: ${song.artist}</p>
-            <p class="text-gray-400 italic">${song.message || 'Sin mensaje'}</p>
+            <p style="color:#d1d5db;font-style:italic;">${song.message}</p>
           </div>
           <div class="controls">
-            <button onclick="toggleSong(${index}, this, event)">▶️</button>
+            <button onclick="toggleSong(${index}, this)">▶️</button>
           </div>
-          <div class="progress">
-            <div class="progress-bar"></div>
-          </div>
+          <div class="progress"><div class="progress-bar"></div></div>
         `;
-        songList.appendChild(songCard);
+        songList.appendChild(card);
       });
     }
 
-    // Alternar reproducción/pausa
-    window.toggleSong = (index, button, event) => {
-      event.stopPropagation();
+    function toggleSong(index, button) {
       const song = songs[index];
-      const card = button.parentElement.parentElement;
+      const card = button.closest('.song-card');
       const progressBar = card.querySelector('.progress-bar');
 
       if (currentAudio && currentAudio.src === song.fileName) {
-        if (!currentAudio.paused) {
+        if (currentAudio.paused) {
+          currentAudio.play();
+          button.textContent = '⏸️';
+          updateProgress(progressBar);
+        } else {
           currentAudio.pause();
           button.textContent = '▶️';
           clearInterval(currentProgress);
-        } else {
-          currentAudio.play();
-          button.textContent = '⏸️';
-          updateProgress(index, progressBar);
         }
       } else {
         if (currentAudio) {
           currentAudio.pause();
-          currentAudio.currentTime = 0;
-          if (currentProgress) clearInterval(currentProgress);
-          const prevButton = document.querySelector('.controls button');
-          if (prevButton) prevButton.textContent = '▶️';
+          clearInterval(currentProgress);
+          const prevBtn = document.querySelector('.controls button');
+          if (prevBtn) prevBtn.textContent = '▶️';
         }
         currentAudio = new Audio(song.fileName);
         currentAudio.play();
         button.textContent = '⏸️';
-        updateProgress(index, progressBar);
+        updateProgress(progressBar);
         currentAudio.onended = () => {
           button.textContent = '▶️';
           progressBar.style.width = '0';
           clearInterval(currentProgress);
-          currentAudio = null;
         };
       }
-    };
+    }
 
-    // Actualizar barra de progreso
-    function updateProgress(index, progressBar) {
+    function updateProgress(progressBar) {
       if (currentProgress) clearInterval(currentProgress);
       currentProgress = setInterval(() => {
-        if (currentAudio && !currentAudio.paused) {
+        if (currentAudio && currentAudio.duration) {
           const progress = (currentAudio.currentTime / currentAudio.duration) * 100;
           progressBar.style.width = `${progress}%`;
         }
       }, 100);
     }
 
-    // Inicializar
     renderSongs();
   </script>
 </body>
