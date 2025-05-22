@@ -3,102 +3,124 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>100 Canciones para Ti</title>
+  <title>Dedicatorias Musicales</title>
   <style>
-    /* Tailwind-like CSS simplificado */
-    .container { max-width: 1024px; margin: auto; padding: 1rem; }
-    .text-center { text-align: center; }
-    .text-white { color: white; }
-    .font-bold { font-weight: bold; }
-    .font-semibold { font-weight: 600; }
-    .text-purple-400 { color: #c084fc; }
-    .text-purple-300 { color: #d8b4fe; }
-    .text-lg { font-size: 1.125rem; }
-    .text-2xl { font-size: 1.5rem; }
-    .grid { display: grid; gap: 1.5rem; }
-    .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
-    @media (min-width: 640px) { .sm\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 768px) { .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); } }
-
     body {
       margin: 0;
       font-family: sans-serif;
-      background: #1a1a1a;
+      background: #0b0b2a;
       color: white;
       overflow-x: hidden;
+      background-image: radial-gradient(white 1px, transparent 1px);
+      background-size: 4px 4px;
+      animation: twinkle 2s infinite linear;
+    }
+
+    @keyframes twinkle {
+      0% { background-position: 0 0; }
+      100% { background-position: 4px 4px; }
+    }
+
+    .container {
+      max-width: 1024px;
+      margin: auto;
+      padding: 2rem 1rem;
+    }
+
+    .text-center { text-align: center; }
+    .text-purple-400 { color: #c084fc; }
+    .text-purple-300 { color: #d8b4fe; }
+    .text-white { color: white; }
+    .text-4xl { font-size: 2.5rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .text-lg { font-size: 1.125rem; }
+    .font-bold { font-weight: bold; }
+    .font-semibold { font-weight: 600; }
+
+    .grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
 
     .song-card {
       position: relative;
-      height: 300px;
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
+      height: 340px;
+      background: rgba(255,255,255,0.05);
       border: 2px solid #c084fc;
       border-radius: 15px;
-      box-shadow: 0 0 20px rgba(192,132,252,0.5);
       overflow: hidden;
       transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 10px rgba(192,132,252,0.3);
+      backdrop-filter: blur(8px);
     }
 
-    .song-card:hover {
+    .song-card.active {
+      box-shadow: 0 0 30px rgba(192,132,252,0.9);
       transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(192,132,252,0.8);
     }
 
-    .wave {
-      position: absolute;
-      top: 30%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80%;
-      height: 20%;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><path d="M0 10 Q 10 5 20 10 T 40 10 T 60 10 T 80 10 T 100 10" fill="none" stroke="%23c084fc" stroke-width="2"/></svg>') repeat-x;
-      background-size: 100% 100%;
+    .song-img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
     }
 
     .song-info {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      z-index: 2;
+      padding: 0.5rem 1rem;
+    }
+
+    .song-info h3 {
+      color: #c084fc;
+      margin: 0.3rem 0;
     }
 
     .controls {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
+      display: flex;
+      justify-content: center;
+      margin-top: 0.5rem;
     }
 
     .controls button {
-      background: none;
-      border: none;
-      color: #c084fc;
-      font-size: 1.5rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 2px solid #c084fc;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .controls button:hover {
+      background: rgba(192, 132, 252, 0.2);
+      transform: scale(1.1);
+    }
+
+    .controls svg {
+      fill: #c084fc;
     }
 
     .progress {
-      position: absolute;
-      bottom: 50px;
-      left: 20px;
-      right: 20px;
       height: 4px;
       background: rgba(192, 132, 252, 0.2);
+      margin: 10px 20px 0;
+      border-radius: 3px;
+      overflow: hidden;
     }
 
     .progress-bar {
       height: 100%;
       background: #c084fc;
-      width: 0;
+      width: 0%;
       transition: width 0.1s linear;
-      box-shadow: 0 0 10px #c084fc;
     }
+
   </style>
 </head>
 <body>
-
   <div class="container">
     <header class="text-center">
       <h1 class="text-purple-400 text-4xl font-bold">Dedicatorias Musicales</h1>
@@ -107,7 +129,7 @@
 
     <section class="mt-8">
       <h2 class="text-purple-300 text-2xl font-semibold mb-4">Canciones Dedicadas</h2>
-      <div id="songList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3"></div>
+      <div id="songList" class="grid"></div>
     </section>
   </div>
 
@@ -117,19 +139,22 @@
         title: "Por ti",
         artist: "3 am",
         message: "Esta canción me recuerda a ti cada vez que la escucho.",
-        fileName: "Cancion1.mp3"
+        fileName: "musica/Cancion1.mp3",
+        image: "img/cover1.jpg"
       },
       {
         title: "Noches de Estrellas",
         artist: "Artista 2",
         message: "Para las noches que miramos las estrellas juntos.",
-        fileName: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+        fileName: "musica/Cancion2.mp3",
+        image: "img/cover2.jpg"
       },
       {
         title: "Sonrisas Eternas",
         artist: "Artista 3",
         message: "Tu sonrisa ilumina más que cualquier estrella.",
-        fileName: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+        fileName: "musica/Cancion3.mp3",
+        image: "img/cover3.jpg"
       }
     ];
 
@@ -142,14 +167,22 @@
         const card = document.createElement('div');
         card.className = 'song-card';
         card.innerHTML = `
-          <div class="wave"></div>
+          <img class="song-img" src="${song.image}" alt="cover">
           <div class="song-info">
-            <h3 class="text-purple-400">${song.title}</h3>
+            <h3>${song.title}</h3>
             <p>Artista: ${song.artist}</p>
             <p style="color:#d1d5db;font-style:italic;">${song.message}</p>
           </div>
           <div class="controls">
-            <button onclick="toggleSong(${index}, this)">▶️</button>
+            <button onclick="toggleSong(${index}, this)">
+              <svg width="30" height="30" viewBox="0 0 24 24">
+                <polygon class="play-icon" points="5,3 19,12 5,21"></polygon>
+                <g class="pause-icon" style="display:none">
+                  <rect x="6" y="4" width="4" height="16"></rect>
+                  <rect x="14" y="4" width="4" height="16"></rect>
+                </g>
+              </svg>
+            </button>
           </div>
           <div class="progress"><div class="progress-bar"></div></div>
         `;
@@ -161,30 +194,42 @@
       const song = songs[index];
       const card = button.closest('.song-card');
       const progressBar = card.querySelector('.progress-bar');
+      const svg = button.querySelector('svg');
+      const playIcon = svg.querySelector('.play-icon');
+      const pauseIcon = svg.querySelector('.pause-icon');
 
-      if (currentAudio && currentAudio.src === song.fileName) {
+      if (currentAudio && currentAudio.src.includes(song.fileName)) {
         if (currentAudio.paused) {
           currentAudio.play();
-          button.textContent = '⏸️';
+          playIcon.style.display = 'none';
+          pauseIcon.style.display = 'block';
+          card.classList.add('active');
           updateProgress(progressBar);
         } else {
           currentAudio.pause();
-          button.textContent = '▶️';
+          playIcon.style.display = 'block';
+          pauseIcon.style.display = 'none';
+          card.classList.remove('active');
           clearInterval(currentProgress);
         }
       } else {
         if (currentAudio) {
           currentAudio.pause();
           clearInterval(currentProgress);
-          const prevBtn = document.querySelector('.controls button');
-          if (prevBtn) prevBtn.textContent = '▶️';
+          document.querySelectorAll('.song-card').forEach(c => c.classList.remove('active'));
+          document.querySelectorAll('.play-icon').forEach(i => i.style.display = 'block');
+          document.querySelectorAll('.pause-icon').forEach(i => i.style.display = 'none');
         }
         currentAudio = new Audio(song.fileName);
         currentAudio.play();
-        button.textContent = '⏸️';
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+        card.classList.add('active');
         updateProgress(progressBar);
         currentAudio.onended = () => {
-          button.textContent = '▶️';
+          playIcon.style.display = 'block';
+          pauseIcon.style.display = 'none';
+          card.classList.remove('active');
           progressBar.style.width = '0';
           clearInterval(currentProgress);
         };
